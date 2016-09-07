@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <EditText android:id="@+id/tenant"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="@string/tenant"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:singleLine="true"
+        android:selectAllOnFocus="true" />
+    <EditText android:id="@+id/deviceId"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="@string/deviceId"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:selectAllOnFocus="true" />
+    <EditText android:id="@+id/token"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="@string/token"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:selectAllOnFocus="true" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm"
+        android:onClick="confirm"
+        android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan"
+        android:onClick="scan"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

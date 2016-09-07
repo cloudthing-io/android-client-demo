@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CloudThing Simulated Device</string>
+    <string name="tenant">Enter the tenant short name</string>
+    <string name="deviceId">Enter the device\'s ID</string>
+    <string name="token">Enter the device\'s token</string>
+    <string name="button_send">Send</string>
+    <string name="confirm">Confirm</string>
+    <string name="data_id">Data ID</string>
+    <string name="value">Value</string>
+    <string name="title_activity_simple_scanner">SimpleScannerActivity</string>
+</resources>
