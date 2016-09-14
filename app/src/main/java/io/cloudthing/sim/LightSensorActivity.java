@@ -13,8 +13,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import io.cloudthing.sim.connectivity.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.SimpleDataRequestFactory;
+import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
+import io.cloudthing.sim.connectivity.http.SimpleDataRequestFactory;
 import io.cloudthing.sim.utils.CredentialCache;
 
 public class LightSensorActivity extends Activity implements SensorEventListener {

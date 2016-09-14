@@ -13,9 +13,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import io.cloudthing.sim.connectivity.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.ManyValuesDataRequestFactory;
-import io.cloudthing.sim.connectivity.SimpleDataRequestFactory;
+import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
+import io.cloudthing.sim.connectivity.http.ManyValuesDataRequestFactory;
 import io.cloudthing.sim.utils.CredentialCache;
 
 public class AccelerometerSensorActivity extends Activity implements SensorEventListener {

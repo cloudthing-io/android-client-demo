@@ -5,7 +5,9 @@
     <string name="token">Enter the device\'s token</string>
     <string name="button_send">Send</string>
     <string name="confirm">Confirm</string>
+    <string name="scan">Scan</string>
     <string name="data_id">Data ID</string>
     <string name="value">Value</string>
     <string name="title_activity_simple_scanner">SimpleScannerActivity</string>
+    <string name="text_scan_qr">Scan QR code from your device\'s page (connectivity)</string>
 </resources>

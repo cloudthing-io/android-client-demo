@@ -1,4 +1,4 @@
-package io.cloudthing.sim.connectivity;
+package io.cloudthing.sim.connectivity.http;
 
 import android.content.Context;
 

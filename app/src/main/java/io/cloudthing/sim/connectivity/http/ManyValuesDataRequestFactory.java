@@ -1,4 +1,4 @@
-package io.cloudthing.sim.connectivity;
+package io.cloudthing.sim.connectivity.http;
 
 import android.content.Context;
 
@@ -12,19 +12,21 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by kleptoman on 02.09.16.
  */
-public class SimpleDataRequestFactory extends DeviceRequestFactory {
+public class ManyValuesDataRequestFactory extends DeviceRequestFactory {
 
-    private static final String BODY_TEMPLATE = "{\"r\":[{'k':'%s','v':%s}]}";
+    private static final String BODY_TEMPLATE = "{\"r\":[%s]}";
+    private static final String DATA_OBJ_TEMPLATE = "{'k':'%s','v':%s}";
 
-    private String dataId;
-    private String dataValue;
+    private Map<String, String> data = new HashMap<>();
 
-    public SimpleDataRequestFactory(Context ctx, String deviceId, String token, String tenant) {
+
+    public ManyValuesDataRequestFactory(Context ctx, String deviceId, String token, String tenant) {
         super(ctx, deviceId, token, tenant);
     }
 
@@ -39,23 +41,25 @@ public class SimpleDataRequestFactory extends DeviceRequestFactory {
     }
 
     private JSONObject getRequestBody() throws JSONException {
-        return new JSONObject(String.format(BODY_TEMPLATE, dataId, dataValue));
+        StringBuilder sBuilder = new StringBuilder();
+        int iter = 0;
+        for (Map.Entry<String, String> dataEntry: data.entrySet()) {
+            if (iter != 0) {
+                sBuilder.append(',');
+            }
+            sBuilder.append(String.format(DATA_OBJ_TEMPLATE, dataEntry.getKey(), dataEntry.getValue()));
+            iter++;
+        }
+
+        return new JSONObject(String.format(BODY_TEMPLATE, sBuilder.toString()));
     }
 
-    public String getDataId() {
-        return dataId;
+    public void clearData() {
+        data.clear();
     }
 
-    public void setDataId(String dataId) {
-        this.dataId = dataId;
-    }
-
-    public String getDataValue() {
-        return dataValue;
-    }
-
-    public void setDataValue(String dataValue) {
-        this.dataValue = dataValue;
+    public void putData(String dataId, String dataValue) {
+        data.put(dataId, dataValue);
     }
 
     private class SimpleDataRequest extends JsonObjectRequest {

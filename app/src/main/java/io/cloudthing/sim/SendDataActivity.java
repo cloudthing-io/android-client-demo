@@ -1,9 +1,13 @@
 package io.cloudthing.sim;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,8 +16,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import io.cloudthing.sim.connectivity.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.SimpleDataRequestFactory;
+import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
+import io.cloudthing.sim.connectivity.http.SimpleDataRequestFactory;
 import io.cloudthing.sim.utils.CredentialCache;
 
 public class SendDataActivity extends AppCompatActivity {
@@ -24,6 +28,9 @@ public class SendDataActivity extends AppCompatActivity {
 
     private Context ctx;
     private SimpleDataRequestFactory simpleDataRequestFactory;
+
+    private boolean serviceBound = false;
+    private CommandQueueService commandService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,8 @@ public class SendDataActivity extends AppCompatActivity {
         this.ctx = this.getApplicationContext();
         prepareRequestFactory();
         setTextViews();
+        Intent intent = new Intent(this, CommandQueueService.class);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void sendMessage(View view) {
@@ -56,6 +65,17 @@ public class SendDataActivity extends AppCompatActivity {
     public void sendAccelerometer(View view) {
         Intent intent = new Intent(ctx, AccelerometerSensorActivity.class);
         startActivity(intent);
+    }
+
+    public void waitForCommands(View view) {
+        Log.i("click", "service connect to CT: "  + serviceBound);
+        if (serviceBound) {
+            try {
+                commandService.connectToCloudThing();
+            } catch (Exception e) {
+                Log.e("MQTT-SERVICE", "Error on connecting: " + e.getMessage(), e);
+            }
+        }
     }
 
     private void sendData(String dataId, String dataValue) {
@@ -91,4 +111,37 @@ public class SendDataActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (serviceBound) {
+            unbindService(serviceConnection);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (serviceBound) {
+            unbindService(serviceConnection);
+        }
+    }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            Log.i("bind", "service connected");
+            CommandQueueService.LocalBinder binder = (CommandQueueService.LocalBinder) service;
+            commandService = binder.getService();
+            serviceBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            Log.i("bind", "service disconnected");
+            serviceBound = false;
+        }
+    };
 }

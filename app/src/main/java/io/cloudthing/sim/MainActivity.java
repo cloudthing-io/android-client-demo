@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.JsonReader;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -15,8 +13,8 @@ import com.android.volley.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.cloudthing.sim.connectivity.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.ValidationRequestFactory;
+import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
+import io.cloudthing.sim.connectivity.http.ValidationRequestFactory;
 import io.cloudthing.sim.utils.CredentialCache;
 
 public class MainActivity extends AppCompatActivity {
