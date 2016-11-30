@@ -11,5 +11,9 @@
     <string name="title_activity_simple_scanner">SimpleScannerActivity</string>
     <string name="text_scan_qr">Scan QR code from your device\'s page (connectivity)</string>
 
+    <string name="form_short_name">mobile_phone</string>
+    <string name="form_device_id">k3o3b4eYRo2Xp49dZeVQoQ</string>
+    <string name="form_token">60GEdpggroA50AoWkNIySsvWp9qhHpB8</string>
+
 
 </resources>
