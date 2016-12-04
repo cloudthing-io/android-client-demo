@@ -1,6 +1,7 @@
 package io.cloudthing.sim.connectivity.http;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -62,6 +63,7 @@ public class SimpleDataRequestFactory extends DeviceRequestFactory {
 
         public SimpleDataRequest(String url, JSONObject jsonRequest, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
             super(Method.POST, url, jsonRequest, listener, errorListener);
+            Log.d("appdbg","Request: " + jsonRequest.toString());
         }
 
         @Override
