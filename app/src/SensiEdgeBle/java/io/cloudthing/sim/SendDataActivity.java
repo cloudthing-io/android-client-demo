@@ -62,8 +62,13 @@ public class SendDataActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void sendAccelerometer(View view) {
-        Intent intent = new Intent(ctx, AccelerometerSensorActivity.class);
+//    public void sendAccelerometer(View view) {
+//        Intent intent = new Intent(ctx, AccelerometerSensorActivity.class);
+//        startActivity(intent);
+//    }
+
+    public void openConnectSensiEdgeBleDeviceActivity(View view) {
+        Intent intent = new Intent(ctx, ConnectSensibleActivity.class);
         startActivity(intent);
     }
 

@@ -86,11 +86,11 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send accelerometer data"
-            android:id="@+id/send_accelerometer"
+            android:text="Connect to SensiEdge BLE device"
+            android:id="@+id/connect_sensible"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:onClick="sendAccelerometer"/>
+            android:onClick="openConnectSensiEdgeBleDeviceActivity"/>
 
 
         <Button

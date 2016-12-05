@@ -11,9 +11,17 @@
     <string name="title_activity_simple_scanner">SimpleScannerActivity</string>
     <string name="text_scan_qr">Scan QR code from your device\'s page (connectivity)</string>
 
-    <string name="form_short_name">mobile_phone</string>
-    <string name="form_device_id">k3o3b4eYRo2Xp49dZeVQoQ</string>
-    <string name="form_token">60GEdpggroA50AoWkNIySsvWp9qhHpB8</string>
+    <string name="title_activity_scan">Device Scan</string>
+    <string name="startScanMenu">Start Scan</string>
+    <string name="StopScanMenu">Stop Scan</string>
+
+    <string name="progressDialogConnTitle">Connecting..</string>
+    <string name="progressDialogConnMsg">Connecting with: %s</string>
+    <string name="progressDialogConnMsgDeadNodeError">Error during the connection with the node %s
+    </string>
+    <string name="progressDialogConnMsgUnreachableNodeError">Node %s is unreachable</string>
+    <string name="progressDialogConnMsgLostNodeError">Lost connection with the node %s</string>
+
 
 
 </resources>
