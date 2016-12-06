@@ -2,6 +2,7 @@ package io.cloudthing.sim;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +16,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.sensisdk.DeviceManager;
 import com.sensisdk.nodes.AbstractNode;
 import com.st.BlueSTSDK.Feature;
 
 import java.util.List;
+
+import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
+import io.cloudthing.sim.connectivity.http.ManyValuesDataRequestFactory;
+import io.cloudthing.sim.utils.CredentialCache;
 
 
 /**
@@ -29,6 +37,12 @@ import java.util.List;
  * we display it
  */
 public class FeatureListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    private ManyValuesDataRequestFactory manyValuesDataRequestFactory;
+    private String mTenant;
+    private String mDeviceId;
+    private String mToken;
+    private Context mContext;
 
     /**
      * tag used for retrieve the NodeContainerFragment
@@ -129,6 +143,12 @@ public class FeatureListActivity extends AppCompatActivity implements AdapterVie
                     .findFragmentByTag(NODE_FRAGMENT);
 
         }
+        mTenant = CredentialCache.getInstance().getTenant();
+        mDeviceId = CredentialCache.getInstance().getDeviceId();
+        mToken = CredentialCache.getInstance().getToken();
+
+        mContext = this;
+        prepareRequestFactory(mContext);
     }
 
     /**
@@ -309,7 +329,17 @@ public class FeatureListActivity extends AppCompatActivity implements AdapterVie
         @Override
         public void onUpdate(Feature f, Feature.Sample sample) {
             final String featureDump = f.toString();
-            Log.d("appdbg", "Feature name: " + f.getName() + ": " + sample.data[0]);
+            int inx;
+//            Log.d("appdbg", "Feature name: " + f.getName() + ": " + sample.data[0]);
+            manyValuesDataRequestFactory.clearData();
+            for (inx = 0; inx < sample.data.length; inx++) {
+                manyValuesDataRequestFactory.putData(
+                        f.getName() + sample.dataDesc[inx].getName(),
+                        String.valueOf(sample.data[inx]));
+            }
+            HttpRequestQueue.getInstance(mContext)
+                    .addToRequestQueue(manyValuesDataRequestFactory.getRequest());
+
             FeatureListActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -317,5 +347,23 @@ public class FeatureListActivity extends AppCompatActivity implements AdapterVie
                 }
             });
         }
+    }
+
+    private void prepareRequestFactory(Context ctx) {
+        manyValuesDataRequestFactory = new ManyValuesDataRequestFactory(ctx, mDeviceId, mToken, mTenant);
+        manyValuesDataRequestFactory.setErrorListener(new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // TODO Error response process
+//                Toast.makeText(ctx, "Error occurred during request!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        manyValuesDataRequestFactory.setListener(new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+//                Toast.makeText(ctx, "Data has been sent!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -57,30 +57,9 @@ public class SendDataActivity extends AppCompatActivity {
         sendData(dataIdText.getText().toString(), dataValueText.getText().toString());
     }
 
-    public void sendLight(View view) {
-        Intent intent = new Intent(ctx, LightSensorActivity.class);
-        startActivity(intent);
-    }
-
-//    public void sendAccelerometer(View view) {
-//        Intent intent = new Intent(ctx, AccelerometerSensorActivity.class);
-//        startActivity(intent);
-//    }
-
     public void openConnectSensiEdgeBleDeviceActivity(View view) {
         Intent intent = new Intent(ctx, ConnectSensibleActivity.class);
         startActivity(intent);
-    }
-
-    public void waitForCommands(View view) {
-        Log.i("click", "service connect to CT: "  + serviceBound);
-        if (serviceBound) {
-            try {
-                commandService.connectToCloudThing();
-            } catch (Exception e) {
-                Log.e("MQTT-SERVICE", "Error on connecting: " + e.getMessage(), e);
-            }
-        }
     }
 
     private void sendData(String dataId, String dataValue) {
