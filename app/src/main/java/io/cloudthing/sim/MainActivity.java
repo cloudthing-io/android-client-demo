@@ -13,9 +13,9 @@ import com.android.volley.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.http.ValidationRequestFactory;
-import io.cloudthing.sim.utils.CredentialCache;
+import io.cloudthing.android_sdk.connectivity.http.HttpRequestQueue;
+import io.cloudthing.android_sdk.connectivity.http.ValidationRequestFactory;
+import io.cloudthing.android_sdk.utils.CredentialCache;
 
 public class MainActivity extends AppCompatActivity {
     private Context ctx;

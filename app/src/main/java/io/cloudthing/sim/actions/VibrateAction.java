@@ -1,11 +1,11 @@
-package io.cloudthing.sim.connectivity.mqtt.actions;
+package io.cloudthing.sim.actions;
 
 import android.content.Context;
 import android.os.Vibrator;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import io.cloudthing.sim.connectivity.mqtt.ICommandAction;
+import io.cloudthing.android_sdk.connectivity.mqtt.ICommandAction;
 
 /**
  * Created by kleptoman on 14.09.16.
