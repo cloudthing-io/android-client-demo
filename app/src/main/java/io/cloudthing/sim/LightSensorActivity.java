@@ -8,14 +8,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
-import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.http.SimpleDataRequestFactory;
-import io.cloudthing.sim.utils.CredentialCache;
+import io.cloudthing.android_sdk.connectivity.mqtt.ClientWrapper;
+import io.cloudthing.android_sdk.data.DataPayload;
+import io.cloudthing.android_sdk.utils.CredentialCache;
 
 public class LightSensorActivity extends Activity implements SensorEventListener {
 
@@ -28,7 +26,8 @@ public class LightSensorActivity extends Activity implements SensorEventListener
     private String deviceId;
     private String token;
     private Context ctx;
-    private SimpleDataRequestFactory simpleDataRequestFactory;
+    private ClientWrapper client;
+    private String topic = "v1/%s/data?ct=json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +41,33 @@ public class LightSensorActivity extends Activity implements SensorEventListener
         this.deviceId = CredentialCache.getInstance().getDeviceId();
         this.token = CredentialCache.getInstance().getToken();
         this.ctx = this.getApplicationContext();
-        prepareRequestFactory();
+        this.client = new ClientWrapper(this.tenant, this.deviceId, this.token, getApplicationContext());
+        try {
+            this.client.connect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+//        prepareRequestFactory();
     }
 
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        try {
+            this.client.connect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
+        try {
+            this.client.disconnect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -62,11 +77,14 @@ public class LightSensorActivity extends Activity implements SensorEventListener
 
             TextView tenantView = (TextView) findViewById(R.id.luxValue);
             tenantView.setText(currentLux + " lux");
+            DataPayload data = new DataPayload();
+            data.putData("ambient", String.valueOf(currentLux));
+            try {
 
-            simpleDataRequestFactory.setDataValue(String.valueOf(currentLux));
-
-            HttpRequestQueue.getInstance(ctx)
-                    .addToRequestQueue(simpleDataRequestFactory.getRequest());
+                this.client.publish(String.format(topic, deviceId), data);
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -75,23 +93,5 @@ public class LightSensorActivity extends Activity implements SensorEventListener
         if(sensor.getType() == Sensor.TYPE_LIGHT) {
 
         }
-    }
-
-    private void prepareRequestFactory() {
-        simpleDataRequestFactory = new SimpleDataRequestFactory(ctx, deviceId, token, tenant);
-        simpleDataRequestFactory.setErrorListener(new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ctx, "Error occurred during request!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        simpleDataRequestFactory.setListener(new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                Toast.makeText(ctx, "Data has been sent!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        simpleDataRequestFactory.setDataId("ambient");
     }
 }

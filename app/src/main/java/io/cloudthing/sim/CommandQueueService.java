@@ -6,10 +6,10 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import io.cloudthing.sim.connectivity.mqtt.ClientWrapper;
-import io.cloudthing.sim.connectivity.mqtt.ComplexCallback;
-import io.cloudthing.sim.connectivity.mqtt.actions.VibrateAction;
-import io.cloudthing.sim.utils.CredentialCache;
+import io.cloudthing.android_sdk.connectivity.mqtt.ClientWrapper;
+import io.cloudthing.android_sdk.connectivity.mqtt.ComplexCallback;
+import io.cloudthing.sim.actions.VibrateAction;
+import io.cloudthing.android_sdk.utils.CredentialCache;
 
 public class CommandQueueService extends Service {
 
@@ -31,6 +31,16 @@ public class CommandQueueService extends Service {
             return;
         }
         System.out.println("Connected");
+    }
+
+    public void disconnectFromCloudThing() throws Exception {
+        if (!this.client.isConnected()) {
+            System.out.println("Already not connected");
+            return;
+        }
+        CredentialCache credentials = CredentialCache.getInstance();
+        this.client.unsubscribe(String.format(this.topic, credentials.getDeviceId()));
+        this.client.disconnect();
     }
 
     private ComplexCallback createCallback() {

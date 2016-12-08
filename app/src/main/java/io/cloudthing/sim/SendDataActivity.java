@@ -16,9 +16,13 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.http.SimpleDataRequestFactory;
-import io.cloudthing.sim.utils.CredentialCache;
+import org.eclipse.paho.client.mqttv3.MqttException;
+
+import io.cloudthing.android_sdk.connectivity.http.HttpRequestQueue;
+import io.cloudthing.android_sdk.connectivity.http.DataRequestFactory;
+import io.cloudthing.android_sdk.connectivity.mqtt.ClientWrapper;
+import io.cloudthing.android_sdk.data.DataPayload;
+import io.cloudthing.android_sdk.utils.CredentialCache;
 
 public class SendDataActivity extends AppCompatActivity {
 
@@ -27,7 +31,7 @@ public class SendDataActivity extends AppCompatActivity {
     private String token;
 
     private Context ctx;
-    private SimpleDataRequestFactory simpleDataRequestFactory;
+    private DataRequestFactory dataRequestFactory;
 
     private boolean serviceBound = false;
     private CommandQueueService commandService;
@@ -79,11 +83,11 @@ public class SendDataActivity extends AppCompatActivity {
     }
 
     private void sendData(String dataId, String dataValue) {
-        simpleDataRequestFactory.setDataId(dataId);
-        simpleDataRequestFactory.setDataValue(dataValue);
+        dataRequestFactory.clearData();
+        dataRequestFactory.putData(dataId, dataValue);
 
         HttpRequestQueue.getInstance(ctx)
-                .addToRequestQueue(simpleDataRequestFactory.getRequest());
+                .addToRequestQueue(dataRequestFactory.getRequest());
     }
 
     private void setTextViews() {
@@ -96,15 +100,15 @@ public class SendDataActivity extends AppCompatActivity {
     }
 
     private void prepareRequestFactory() {
-        simpleDataRequestFactory = new SimpleDataRequestFactory(ctx, deviceId, token, tenant);
-        simpleDataRequestFactory.setErrorListener(new Response.ErrorListener() {
+        dataRequestFactory = new DataRequestFactory(ctx, deviceId, token, tenant);
+        dataRequestFactory.setErrorListener(new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(ctx, "Error occurred during request!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        simpleDataRequestFactory.setListener(new Response.Listener() {
+        dataRequestFactory.setListener(new Response.Listener() {
             @Override
             public void onResponse(Object response) {
                 Toast.makeText(ctx, "Data has been sent!", Toast.LENGTH_SHORT).show();
@@ -115,17 +119,14 @@ public class SendDataActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (serviceBound) {
-            unbindService(serviceConnection);
-        }
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (serviceBound) {
             unbindService(serviceConnection);
         }
+        super.onDestroy();
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
