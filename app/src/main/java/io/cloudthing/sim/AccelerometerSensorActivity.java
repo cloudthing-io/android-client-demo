@@ -13,9 +13,9 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.http.ManyValuesDataRequestFactory;
-import io.cloudthing.sim.utils.CredentialCache;
+import io.cloudthing.android_sdk.connectivity.http.HttpRequestQueue;
+import io.cloudthing.android_sdk.connectivity.http.DataRequestFactory;
+import io.cloudthing.android_sdk.utils.CredentialCache;
 
 public class AccelerometerSensorActivity extends Activity implements SensorEventListener {
 
@@ -30,7 +30,7 @@ public class AccelerometerSensorActivity extends Activity implements SensorEvent
     private String deviceId;
     private String token;
     private Context ctx;
-    private ManyValuesDataRequestFactory manyValuesDataRequestFactory;
+    private DataRequestFactory dataRequestFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +66,13 @@ public class AccelerometerSensorActivity extends Activity implements SensorEvent
 
             setTextValues();
 
-            manyValuesDataRequestFactory.clearData();
-            manyValuesDataRequestFactory.putData("accX", String.valueOf(accX));
-            manyValuesDataRequestFactory.putData("accY", String.valueOf(accY));
-            manyValuesDataRequestFactory.putData("accZ", String.valueOf(accZ));
+            dataRequestFactory.clearData();
+            dataRequestFactory.putData("accX", String.valueOf(accX));
+            dataRequestFactory.putData("accY", String.valueOf(accY));
+            dataRequestFactory.putData("accZ", String.valueOf(accZ));
 
             HttpRequestQueue.getInstance(ctx)
-                    .addToRequestQueue(manyValuesDataRequestFactory.getRequest());
+                    .addToRequestQueue(dataRequestFactory.getRequest());
         }
     }
 
@@ -93,15 +93,15 @@ public class AccelerometerSensorActivity extends Activity implements SensorEvent
     }
 
     private void prepareRequestFactory() {
-        manyValuesDataRequestFactory = new ManyValuesDataRequestFactory(ctx, deviceId, token, tenant);
-        manyValuesDataRequestFactory.setErrorListener(new Response.ErrorListener() {
+        dataRequestFactory = new DataRequestFactory(ctx, deviceId, token, tenant);
+        dataRequestFactory.setErrorListener(new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(ctx, "Error occurred during request!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        manyValuesDataRequestFactory.setListener(new Response.Listener() {
+        dataRequestFactory.setListener(new Response.Listener() {
             @Override
             public void onResponse(Object response) {
                 Toast.makeText(ctx, "Data has been sent!", Toast.LENGTH_SHORT).show();

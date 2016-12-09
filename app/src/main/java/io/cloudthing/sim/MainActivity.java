@@ -17,11 +17,9 @@ import com.android.volley.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.logging.Logger;
-
-import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.http.ValidationRequestFactory;
-import io.cloudthing.sim.utils.CredentialCache;
+import io.cloudthing.android_sdk.connectivity.http.HttpRequestQueue;
+import io.cloudthing.android_sdk.connectivity.http.ValidationRequestFactory;
+import io.cloudthing.android_sdk.utils.CredentialCache;
 
 public class MainActivity extends AppCompatActivity {
     private Context ctx;
@@ -97,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static class CredentialsReceiver extends BroadcastReceiver {
         private final Handler handler;
+
         public CredentialsReceiver(Handler handler) {
             this.handler = handler;
         }
@@ -106,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    getInstance().updateUI( intent.getStringExtra("token"),
-                                            intent.getStringExtra("tenant"),
-                                            intent.getStringExtra("deviceId"));
+                    getInstance().updateUI(intent.getStringExtra("token"),
+                            intent.getStringExtra("tenant"),
+                            intent.getStringExtra("deviceId"));
                 }
             });
         }
