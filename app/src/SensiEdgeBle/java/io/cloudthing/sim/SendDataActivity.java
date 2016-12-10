@@ -16,9 +16,12 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.http.SimpleDataRequestFactory;
-import io.cloudthing.sim.utils.CredentialCache;
+import io.cloudthing.android_sdk.connectivity.http.HttpRequestQueue;
+import io.cloudthing.android_sdk.utils.CredentialCache;
+
+//import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
+//import io.cloudthing.sim.connectivity.http.SimpleDataRequestFactory;
+//import io.cloudthing.sim.utils.CredentialCache;
 
 public class SendDataActivity extends AppCompatActivity {
 
