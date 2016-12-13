@@ -2,7 +2,6 @@ package io.cloudthing.sim;
 
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,9 +24,9 @@ import com.st.BlueSTSDK.Feature;
 
 import java.util.List;
 
-import io.cloudthing.sim.connectivity.http.HttpRequestQueue;
-import io.cloudthing.sim.connectivity.http.ManyValuesDataRequestFactory;
-import io.cloudthing.sim.utils.CredentialCache;
+import io.cloudthing.android_sdk.connectivity.http.DataRequestFactory;
+import io.cloudthing.android_sdk.connectivity.http.HttpRequestQueue;
+import io.cloudthing.android_sdk.utils.CredentialCache;
 
 
 /**
@@ -38,7 +36,7 @@ import io.cloudthing.sim.utils.CredentialCache;
  */
 public class FeatureListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private ManyValuesDataRequestFactory manyValuesDataRequestFactory;
+    private DataRequestFactory dataRequestFactory;
     private String mTenant;
     private String mDeviceId;
     private String mToken;
@@ -331,14 +329,17 @@ public class FeatureListActivity extends AppCompatActivity implements AdapterVie
             final String featureDump = f.toString();
             int inx;
 //            Log.d("appdbg", "Feature name: " + f.getName() + ": " + sample.data[0]);
-            manyValuesDataRequestFactory.clearData();
+            dataRequestFactory.clearData();
+//            dataRequestFactory.putData("accX", String.valueOf(accX));
+//            dataRequestFactory.putData("accY", String.valueOf(accY));
+//            dataRequestFactory.putData("accZ", String.valueOf(accZ));
             for (inx = 0; inx < sample.data.length; inx++) {
-                manyValuesDataRequestFactory.putData(
+                dataRequestFactory.putData(
                         f.getName() + sample.dataDesc[inx].getName(),
                         String.valueOf(sample.data[inx]));
             }
             HttpRequestQueue.getInstance(mContext)
-                    .addToRequestQueue(manyValuesDataRequestFactory.getRequest());
+                    .addToRequestQueue(dataRequestFactory.getRequest());
 
             FeatureListActivity.this.runOnUiThread(new Runnable() {
                 @Override
@@ -350,8 +351,8 @@ public class FeatureListActivity extends AppCompatActivity implements AdapterVie
     }
 
     private void prepareRequestFactory(Context ctx) {
-        manyValuesDataRequestFactory = new ManyValuesDataRequestFactory(ctx, mDeviceId, mToken, mTenant);
-        manyValuesDataRequestFactory.setErrorListener(new Response.ErrorListener() {
+        dataRequestFactory = new DataRequestFactory(ctx, mDeviceId, mToken, mTenant);
+        dataRequestFactory.setErrorListener(new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // TODO Error response process
@@ -359,7 +360,7 @@ public class FeatureListActivity extends AppCompatActivity implements AdapterVie
             }
         });
 
-        manyValuesDataRequestFactory.setListener(new Response.Listener() {
+        dataRequestFactory.setListener(new Response.Listener() {
             @Override
             public void onResponse(Object response) {
 //                Toast.makeText(ctx, "Data has been sent!", Toast.LENGTH_SHORT).show();
