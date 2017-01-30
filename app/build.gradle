@@ -31,17 +31,17 @@ android {
 
 repositories {
     maven {
-        url  "http://sensiedge.bintray.com/sensisdk"
+        url  "http://dl.bintray.com/wersensi/sensisdk"
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.sensisdk:sensisdk:0.0.18@aar'
+    compile 'com.sensisdk:sensisdk:0.0.19@aar'
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support:design:24.2.0'
-    compile 'me.dm7.barcodescanner:zbar:1.9'
+//    compile 'me.dm7.barcodescanner:zbar:1.9'
     compile 'io.cloudthing.sdk:device:0.1.1'
 }
