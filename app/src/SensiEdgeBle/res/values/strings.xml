@@ -12,6 +12,7 @@
     <string name="text_scan_qr">Scan QR code from your device\'s page (connectivity)</string>
 
     <string name="title_activity_scan">Device Scan</string>
+    <string name="title_activity_connect_sensible">Choose SensiBLE Device</string>
     <string name="startScanMenu">Start Scan</string>
     <string name="StopScanMenu">Stop Scan</string>
 

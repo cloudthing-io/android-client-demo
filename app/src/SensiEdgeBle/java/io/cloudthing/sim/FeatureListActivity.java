@@ -176,10 +176,6 @@ public class FeatureListActivity extends AppCompatActivity implements AdapterVie
 
         int id = item.getItemId();
 
-        //we call keepConnectionOpen for skip the node disconnection when the activity is destroyed
-        //in this way we avoid fast connection/disconnection call
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menu_showRegister) {
             mNodeContainer.keepConnectionOpen(true);
 //            startActivity(SettingsActivity.getStartIntent(this, mNode));
