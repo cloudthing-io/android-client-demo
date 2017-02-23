@@ -1,11 +1,8 @@
 package io.cloudthing.sim;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,25 +20,30 @@ import io.cloudthing.android_sdk.utils.CredentialCache;
 public class MainActivity extends AppCompatActivity {
     private Context ctx;
 
-    private static MainActivity mainActivityRunningInstance;
     private EditText mDeviceIdText;
     private EditText mTokenText;
     private EditText mTenantText;
-
-    private CredentialsReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ctx = this.getApplicationContext();
-        mReceiver = new CredentialsReceiver(new Handler());
-        registerReceiver(mReceiver, new IntentFilter("cloudthingio.intent.action.credentials"));
-        mainActivityRunningInstance = this;
+        Intent intent = getIntent();
+        String strToken = intent.getStringExtra("token");
+        String strDeviceId = intent.getStringExtra("deviceId");
+        String strTenant = intent.getStringExtra("tenant");
+        Log.d("appdbg", "Activity intent: " + intent);
 
         mDeviceIdText = (EditText) findViewById(R.id.deviceId);
         mTokenText = (EditText) findViewById(R.id.token);
         mTenantText = (EditText) findViewById(R.id.tenant);
+        if (null != strDeviceId)
+            mDeviceIdText.setText(strDeviceId);
+        if (null != strToken)
+            mTokenText.setText(strToken);
+        if (null != strTenant)
+            mTenantText.setText(strTenant);
     }
 
     public void confirm(View view) {
@@ -71,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void scan(View view) {
-//        Intent intent = new Intent(ctx, SimpleScannerActivity.class);
-//        startActivityForResult(intent, 0);
     }
 
     @Override
@@ -90,41 +90,5 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public static class CredentialsReceiver extends BroadcastReceiver {
-        private final Handler handler;
-
-        public CredentialsReceiver(Handler handler) {
-            this.handler = handler;
-        }
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    getInstance().updateUI(intent.getStringExtra("token"),
-                            intent.getStringExtra("tenant"),
-                            intent.getStringExtra("deviceId"));
-                }
-            });
-        }
-    }
-
-    public void updateUI(final String strToken,
-                         final String strTenant,
-                         final String strDeviceId) {
-        MainActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                mTenantText.setText(strTenant);
-                mTokenText.setText(strToken);
-                mDeviceIdText.setText(strDeviceId);
-            }
-        });
-    }
-
-    public static MainActivity getInstance() {
-        return mainActivityRunningInstance;
     }
 }
